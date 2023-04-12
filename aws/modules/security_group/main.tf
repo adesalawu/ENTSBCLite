@@ -1,7 +1,7 @@
 resource "aws_security_group" "ribbon_sbc" {
   name_prefix = var.security_group_name_prefix
   description = var.security_group_description
-  vpc_id      = aws_vpc.sbc_vpc.id
+  vpc_id      = var.VPCCIDR.id
 
   dynamic "ingress" {
     for_each = var.tcp_ports
