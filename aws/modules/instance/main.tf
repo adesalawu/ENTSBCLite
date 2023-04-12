@@ -1,7 +1,7 @@
 
 resource "aws_instance" "sbc_instance" {
-  ami                    = var.swe_ami_id
-  instance_type          = var.swe_instance_type
+  ami                    = var.SBCAMIID
+  instance_type          = var.SBCInstanceType
   key_name               = var.key_name
   subnet_id              = aws_subnet.sbc_subnet.id
   vpc_security_group_ids = [aws_security_group.ribbon_sbc.id]
