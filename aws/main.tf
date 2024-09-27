@@ -5,7 +5,7 @@ provider "aws" {
 
 
 module "vpc" {
-  source = "./modules/vpc"
+  source = "../modules/vpc"
 
   vpc_cidr    = var.vpc_cidr
   subnet_cidr = var.public_subnet_cidr
@@ -19,7 +19,7 @@ module "vpc" {
 
 
 module "subnet" {
-  source = "./modules/subnet"
+  source = "../modules/subnet"
   
   subnet_cidr = var.public_subnet_cidr
   subnet_tags = {
@@ -30,7 +30,7 @@ module "subnet" {
 }
 
 module "security_group" {
-  source = "./modules/security_group"
+  source = "../modules/security_group"
 
   name_prefix             = var.security_group_name_prefix
   description             = var.security_group_description
@@ -42,7 +42,7 @@ module "security_group" {
 }
 
 module "instance" {
-  source = "./modules/instance"
+  source = "../modules/instance"
 
   instance_name      = var.sbc_instance_name
   instance_type      = var.swe_instance_type
