@@ -1,2 +1,2 @@
-./vault.tf
-./terraform.tfvars
+.\vault.tf
+.\terraform.tfvars
