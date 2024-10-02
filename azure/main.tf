@@ -10,6 +10,8 @@ terraform {
       version = "2.46.0"
     }
   }
+
+  
   # backend "azurerm" {
   #   resource_group_name  = "TFStorage"
   #   storage_account_name = "tfjamin"
@@ -18,6 +20,26 @@ terraform {
   # }
 }
 
+locals {
+}
+
+resource "azurerm_dns_a_record" "dns_a_record_c" {
+  zone_name           = azurerm_dns_zone.dns-zone_c.name
+  ttl                 = 300
+  tags                = merge(var.tags)
+  resource_group_name = azurerm_resource_group.app-service-resource-group_c.name
+  name                = "app-service-a-record"
+
+  records = [
+    "10.0.180.17",
+  ]
+}
+
+resource "azurerm_dns_zone" "dns-zone_c" {
+  tags                = merge(var.tags)
+  resource_group_name = azurerm_resource_group.app-service-resource-group_c.name
+  name                = "app-service.brainboard.co"
+}
 
 
 
@@ -183,3 +205,42 @@ terraform {
 #   administrator_login          = var.sql-server-admin-user
 # }
 
+resource "azurerm_storage_blob" "azurerm_storage_blob-943c4cb2_c" {
+  type                   = "Block"
+  storage_container_name = azurerm_storage_container.azurerm_storage_container-d1d44abb_c.name
+  storage_account_name   = azurerm_storage_account.azurerm_storage_account-c07b98c1_c.name
+  name                   = "appServiceStorgeBlob"
+}
+
+resource "azurerm_storage_container" "azurerm_storage_container-d1d44abb_c" {
+  storage_account_name  = azurerm_storage_account.azurerm_storage_account-c07b98c1_c.name
+  name                  = "storage-container"
+  container_access_type = "private"
+}
+
+resource "azurerm_storage_account" "azurerm_storage_account-c07b98c1_c" {
+  tags                     = merge(var.tags)
+  resource_group_name      = azurerm_resource_group.app-service-resource-group_c.name
+  name                     = "brainboardstorageaccount"
+  location                 = "France Central"
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+}
+
+# resource "azurerm_sql_database" "azurerm_sql_database-5124ee2d_c" {
+#   tags                = merge(var.tags)
+#   server_name         = azurerm_sql_server.azurerm_sql_server-0e44baf8_c.name
+#   resource_group_name = azurerm_resource_group.app-service-resource-group_c.name
+#   name                = var.sql-db-name
+#   location            = "France Central"
+# }
+
+# resource "azurerm_sql_server" "azurerm_sql_server-0e44baf8_c" {
+#   version                      = "12.0"
+#   tags                         = merge(var.tags)
+#   resource_group_name          = azurerm_resource_group.app-service-resource-group_c.name
+#   name                         = var.sql-server-name
+#   location                     = "France Central"
+#   administrator_login_password = "AVyP#KtW^#ul)6rwIgh?)>F+Cn50s"
+#   administrator_login          = var.sql-server-admin-user
+# }
