@@ -1,4 +1,13 @@
 #ignore 
 
+*.tfstate
+*.tfstate.*
+.terraform.tfstate.lock.info
+*.tfvars
+*.auto.tfvars
+
+# Ignore environment-specific files
+.envrc
+
 vault.tf
 terraform.tfvars
