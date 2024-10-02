@@ -1,2 +1,4 @@
-vault.tf
-terraform.tfvars
+#ignore 
+
+*.vault.tf
+*.terraform.tfvars
