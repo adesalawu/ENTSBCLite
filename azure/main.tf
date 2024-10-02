@@ -1,24 +1,3 @@
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "3.81.0"
-    }
-
-    azuread = {
-      source  = "hashicorp/azuread"
-      version = "2.46.0"
-    }
-  }
-
-  
-  # backend "azurerm" {
-  #   resource_group_name  = "TFStorage"
-  #   storage_account_name = "tfjamin"
-  #   container_name       = "tfstatecontainer"
-  #   key                  = "terraform.tfstate"
-  # }
-}
 
 locals {
 }
