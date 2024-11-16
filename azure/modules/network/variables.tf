@@ -82,10 +82,3 @@ variable "microsoft_teams_sip_ips" {
     "52.114.176.0/22", "52.114.180.0/22", "52.114.184.0/22"
   ]
 }
-
-variable "vm_size" {
-  description = "Size of the virtual machine"
-  type        = string
-  default     = ""
-}
-

@@ -107,3 +107,9 @@ variable "SBCCoreVoipCIDR" {
   type        = string
   default     = "10.0.5.0/24" 
 }
+
+variable "key_name" {
+  description = "Key Name"
+  type        = string
+  default     = "45678765" 
+}
