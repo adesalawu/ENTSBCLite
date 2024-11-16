@@ -1,3 +1,11 @@
+
+variable "SBCSWE_HFE_SUBNET" {
+  description = "The CIDR block for the  SBC internal VoIP (private) subnet"
+  type        = list
+  default     = [aws_subnet.SBCSWE_HFE_MGMT.id, aws_subnet.SBCSWE_HFE_Pub.id,
+                aws_subnet.SBCSWE_HFE_PKT1.id, aws_subnet.SBCSWE_HFE_PKT0.id]
+} 
+
 variable "SBCInstanceType" {
   description = "The instance type for the Ribbon SBC SWe"
   type        = string
@@ -102,11 +110,7 @@ variable "SBCAccessVoipCIDR" {
   default     = "10.0.4.0/24"
 }
 
-variable "SBCCoreVoipCIDR" {
-  description = "The CIDR block for the  SBC internal VoIP (private) subnet"
-  type        = string
-  default     = "10.0.5.0/24"
-}
+
 
 variable "key_name" {
   description = "Key Name"

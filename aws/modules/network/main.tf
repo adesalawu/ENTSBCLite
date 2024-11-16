@@ -11,7 +11,7 @@ resource "aws_vpc" "my_vpc" {
 
 # ✅ Subnets: Within a VPC, you create subnets to segment the IP address range. Subnets can be public (accessible from the Internet) or private (not accessible from the Internet). They help organize and control network traffic flow.
 
-resource "aws_subnet" "public_subnet_1" {
+resource "aws_subnet" "SBCSWE_HFE_MGMT" {
   vpc_id                  = aws_vpc.my_vpc.id
   cidr_block              = "10.0.1.0/24"
   availability_zone       = "us-east-1a"
@@ -21,7 +21,7 @@ resource "aws_subnet" "public_subnet_1" {
   }
 }
 
-resource "aws_subnet" "public_subnet_2" {
+resource "aws_subnet" "SBCSWE_HFE_Pub" {
   vpc_id                  = aws_vpc.my_vpc.id
   cidr_block              = "10.0.2.0/24"
   availability_zone       = "us-east-1b"
@@ -31,32 +31,41 @@ resource "aws_subnet" "public_subnet_2" {
   }
 }
 
-resource "aws_subnet" "private_subnet_1" {
+resource "aws_subnet" "SBCSWE_HFE_PKT1" {
   vpc_id            = aws_vpc.my_vpc.id
   cidr_block        = "10.0.3.0/24"
   availability_zone = "us-east-1a"
   tags = {
-    Name = "private-subnet-1"
+    Name = "SBCSWE_HFE_PKT1"
   }
 }
 
-resource "aws_subnet" "private_subnet_2" {
+resource "aws_subnet" "SBCSWE_HFE_PKT0" {
   vpc_id            = aws_vpc.my_vpc.id
   cidr_block        = "10.0.4.0/24"
   availability_zone = "us-east-1b"
   tags = {
-    Name = "private-subnet-2"
+    Name = "SBCSWE_HFE_PKT0"
+  }
+}
+
+resource "aws_subnet" "SBCSWE_HFE_HA" {
+  vpc_id            = aws_vpc.my_vpc.id
+  cidr_block        = "10.0.5.0/24"
+  availability_zone = "us-east-1b"
+  tags = {
+    Name = "SBCSWE_HFE_HA"
   }
 }
 
 # ✅ Route Tables: Route tables define how traffic is routed between subnets and to external networks. They determine the paths that network traffic takes within the VPC.
 
-resource "aws_route_table" "private_route_table" {
+resource "aws_route_table" "SBCSWE_HFE_RT" {
   vpc_id = aws_vpc.my_vpc.id
 
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.my_nat_gw.id
+    nat_gateway_id = aws_nat_gateway.SBCSWE_HFE_NAT.id
   }
 
   tags = {
@@ -64,39 +73,12 @@ resource "aws_route_table" "private_route_table" {
   }
 }
 
-resource "aws_route_table_association" "private_subnet_assoc_1" {
-  subnet_id      = aws_subnet.private_subnet_1.id
-  route_table_id = aws_route_table.private_route_table.id
+
+resource "aws_route_table_association" "SBCSWE_HFE_RTA" {
+  subnet_id      = [var.SBCSWE_HFE_SUBNET]
+  route_table_id = aws_route_table.SBCSWE_HFE_RT.id
 }
 
-resource "aws_route_table_association" "private_subnet_assoc_2" {
-  subnet_id      = aws_subnet.private_subnet_2.id
-  route_table_id = aws_route_table.private_route_table.id
-}
-
-resource "aws_route_table" "public_route_table" {
-  vpc_id = aws_vpc.my_vpc.id
-
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.my_igw.id
-  }
-
-  tags = {
-    Name = "public-route-table"
-  }
-}
-
-
-resource "aws_route_table_association" "public_subnet_assoc_1" {
-  subnet_id      = aws_subnet.public_subnet_1.id
-  route_table_id = aws_route_table.public_route_table.id
-}
-
-resource "aws_route_table_association" "public_subnet_assoc_2" {
-  subnet_id      = aws_subnet.public_subnet_2.id
-  route_table_id = aws_route_table.public_route_table.id
-}
 
 
 
@@ -140,7 +122,7 @@ resource "aws_security_group" "ribbon_sbc" {
 
 # ✅ Internet Gateway: The Internet Gateway enables communication between instances in your VPC and the public internet. It's required for resources in public subnets to access the internet.
 
-resource "aws_internet_gateway" "my_igw" {
+resource "aws_internet_gateway" "SBCSWE_HFE_GW" {
   vpc_id = aws_vpc.my_vpc.id
   tags = {
     Name = "my-internet-gateway"
@@ -148,9 +130,9 @@ resource "aws_internet_gateway" "my_igw" {
 }
 
 
-resource "aws_nat_gateway" "my_nat_gw" {
-  allocation_id = aws_eip.nat_eip.id
-  subnet_id     = aws_subnet.public_subnet_1.id
+resource "aws_nat_gateway" "SBCSWE_HFE_NAT" {
+  allocation_id = aws_eip.SBCSWE_HFE_NAT_EIP.id
+  subnet_id     = var.SBCSWE_HFE_SUBNET
   tags = {
     Name = "my-nat-gateway"
   }
@@ -158,7 +140,7 @@ resource "aws_nat_gateway" "my_nat_gw" {
 
 
 # ✅ Elastic Load Balancing (ELB): ELB distributes incoming application traffic across multiple instances for better availability and fault tolerance.
-resource "aws_eip" "nat_eip" {
+resource "aws_eip" "SBCSWE_HFE_NAT_EIP" {
   vpc = true
 }
 
