@@ -62,13 +62,13 @@ variable "security_group_name" {
 variable "tcp_ports" {
   description = "List of allowed TCP ports"
   type        = list(number)
-  default     = [5060, 5062, 5080, 5081, 5090, 5091]
+  default     = [80, 443, 5060, 5062, 5080, 5081, 5090, 5091]
 }
 
 variable "udp_ports" {
   description = "List of allowed UDP ports"
   type        = list(number)
-  default     = [3478, 3479, 3480, 3481, 3489, 50000, 50020, 50040, 50060, 50080]
+  default     = [16384-21384]
 }
 
 variable "microsoft_teams_sip_ips" {

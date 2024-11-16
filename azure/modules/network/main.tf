@@ -72,19 +72,35 @@ resource "azurerm_network_security_group" "sg" {
   resource_group_name = azurerm_resource_group.rg.name
 }
 
-resource "azurerm_network_security_rule" "sbc_rule" {
-  name                        = "allow-sbc-traffic"
+resource "azurerm_network_security_rule" "sbc-smi" {
+  name                        = "Signaling & Media Interface"
   priority                    = 100
   direction                   = "Inbound"
   access                      = "Allow"
   protocol                    = "Tcp"
   source_port_range           = "*"
-  destination_port_ranges     = ["5060", "5061", "5080", "5081"]
+  destination_port_ranges     = ["${[var.tcp_ports, var.udp_ports]}"]
   source_address_prefix       = "*"
   destination_address_prefix  = "*"
   resource_group_name         = azurerm_resource_group.rg.name
   network_security_group_name = azurerm_network_security_group.sg.name
 }
+
+
+resource "azurerm_network_security_rule" "Management-Subnet" {
+  name                        = "Management-Subnet"
+  priority                    = 100
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_ranges     = ["443"]
+  source_address_prefix       = "*"
+  destination_address_prefix  = "*"
+  resource_group_name         = azurerm_resource_group.rg.name
+  network_security_group_name = azurerm_network_security_group.sg.name
+}
+
 
 resource "azurerm_subnet_network_security_group_association" "sga" {
   subnet_id                 = [azurerm_subnet.nic1.id, azurerm_subnet.nic2.id]
