@@ -60,6 +60,12 @@ resource "aws_subnet" "SBCSWE_HFE_HA" {
 
 # ✅ Route Tables: Route tables define how traffic is routed between subnets and to external networks. They determine the paths that network traffic takes within the VPC.
 
+resource "aws_route_table_association" "SBCSWE_HFE_RTA" {
+  subnet_id      = [var.SBCSWE_HFE_SUBNET]
+  route_table_id = aws_route_table.SBCSWE_HFE_RT.id
+}
+
+
 resource "aws_route_table" "SBCSWE_HFE_RT" {
   vpc_id = aws_vpc.my_vpc.id
 
@@ -72,14 +78,6 @@ resource "aws_route_table" "SBCSWE_HFE_RT" {
     Name = "private-route-table"
   }
 }
-
-
-resource "aws_route_table_association" "SBCSWE_HFE_RTA" {
-  subnet_id      = [var.SBCSWE_HFE_SUBNET]
-  route_table_id = aws_route_table.SBCSWE_HFE_RT.id
-}
-
-
 
 
 # ✅ Security Groups: Security groups act as virtual firewalls for instances. They control inbound and outbound traffic based on rules you define. Each instance can be associated with one or more security groups.
@@ -124,15 +122,16 @@ resource "aws_security_group" "ribbon_sbc" {
 
 resource "aws_internet_gateway" "SBCSWE_HFE_GW" {
   vpc_id = aws_vpc.my_vpc.id
+
   tags = {
     Name = "my-internet-gateway"
   }
 }
 
-
 resource "aws_nat_gateway" "SBCSWE_HFE_NAT" {
   allocation_id = aws_eip.SBCSWE_HFE_NAT_EIP.id
   subnet_id     = var.SBCSWE_HFE_SUBNET
+
   tags = {
     Name = "my-nat-gateway"
   }
@@ -140,6 +139,7 @@ resource "aws_nat_gateway" "SBCSWE_HFE_NAT" {
 
 
 # ✅ Elastic Load Balancing (ELB): ELB distributes incoming application traffic across multiple instances for better availability and fault tolerance.
+
 resource "aws_eip" "SBCSWE_HFE_NAT_EIP" {
   vpc = true
 }
