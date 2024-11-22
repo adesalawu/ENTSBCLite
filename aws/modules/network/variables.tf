@@ -6,49 +6,75 @@ variable "SBCSWE_HFE_SUBNET" {
                 aws_subnet.SBCSWE_HFE_PKT1.id, aws_subnet.SBCSWE_HFE_PKT0.id]
 } 
 
-variable "SBCInstanceType" {
-  description = "The instance type for the Ribbon SBC SWe"
+variable "SBCSWE_HFE_MGMT_subnet" {
+  description = "The CIDR block for the CIDR for public subnet for SBC"
   type        = string
-  default     = "m5.xlarge"
+  default     = "10.0.1.0/24"
 }
 
-variable "SBCAMIID" {
-  description = "The AMI ID for the Ribbon SBC SWe"
+
+variable "SBCSWE_HFE_PKT0_subnet" {
+  description = "The CIDR block for the CIDR for public subnet for SBC"
   type        = string
-  default     = "ami-0123456789abcdef"
+  default     = "10.0.2.0/24"
 }
 
-variable "FreePbxInstanceType" {
-  description = "The AMI ID for the Ribbon SBC SWe"
+variable "SBCSWE_HFE_PKT1_subnet" {
+  description = "The CIDR block for the Management subnet"
   type        = string
-  default     = "m5.xlarge"
+  default     = "10.0.3.0/24"
 }
 
-variable "SBCCLIPassword" {
-  description = "The AMI ID for the Ribbon SBC SWe"
+variable "SBCSWE_HFE_HA_subnet" {
+  description = "The CIDR block for the SBC high-availability subnet."
   type        = string
-  default     = "input"
+  default     = "10.0.3.0/24"
 }
 
-variable "security_group_name_prefix" {
-  description = "Prefix for the name of the security group"
-  default     = "ribbon-sbc-sg"
+variable "SBCSWE_HFE_Pub_subnet" {
+  description = "The CIDR block for the SBC external VoIP (public facing)subnet."
+  type        = string
+  default     = "10.0.4.0/24"
 }
 
-variable "security_group_description" {
-  description = "Description for the security group"
-  default     = "Security group for Ribbon SBC"
-}
 
-variable "tcp_ports" {
+variable "MGMT_tcp_ports" {
   description = "List of TCP ports to allow"
-  default     = [5060, 5062, 5080, 5081, 5090, 5091]
+  default     = [22, 2022, 2024, 80, 443, 444]
 }
 
-variable "udp_ports" {
+variable "MGMT_udp_ports" {
   description = "List of UDP ports to allow"
-  default     = [3478, 3479, 3480, 3481, 3489, 50000, 50020, 50040, 50060, 50080]
+  default     = [123, 161, 162, 3054, 3055, 5093]
 }
+
+variable "HA_tcp_ports" {
+  description = "List of TCP ports to allow HA Forwarding Node Security Groups"
+  default     = [5060, 5061]
+}
+
+variable "HA_udp_ports" {
+  description = "List of UDP ports to allow HA Forwarding Node Security Groups"
+  default     = [1024-65535]
+}
+
+
+variable "HA_udp_ports" {
+  description = "HA Forwarding Node Security Groups"
+  default     = [123, 161, 162, 3054, 3055, 5093]
+}
+
+variable "PKT_tcp_ports" {
+  description = "List of TCP ports to allow"
+  default     = [5060, 5061]
+}
+
+variable "PKT_udp_ports" {
+  description = "List of UDP ports to allow"
+  default     = [1024-65535]
+}
+
+
 
 variable "egress_cidr_block" {
   description = "CIDR block to allow egress traffic to"
@@ -78,37 +104,6 @@ variable "VPCCIDR" {
   default     = "10.0.0.0/16"
 }
 
-
-variable "HFEPublicCIDR1" {
-  description = "The CIDR block for the CIDR for public subnet for SBC"
-  type        = string
-  default     = "10.0.1.0/24"
-}
-
-
-variable "HFEPublicCIDR2" {
-  description = "The CIDR block for the CIDR for public subnet for SBC"
-  type        = string
-  default     = "10.0.2.0/24"
-}
-
-variable "ManagementSubnetCIDR" {
-  description = "The CIDR block for the Management subnet"
-  type        = string
-  default     = "10.0.3.0/24"
-}
-
-variable "SBCHASubnetCIDR" {
-  description = "The CIDR block for the SBC high-availability subnet."
-  type        = string
-  default     = "10.0.3.0/24"
-}
-
-variable "SBCAccessVoipCIDR" {
-  description = "The CIDR block for the SBC external VoIP (public facing)subnet."
-  type        = string
-  default     = "10.0.4.0/24"
-}
 
 
 

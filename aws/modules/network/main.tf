@@ -83,26 +83,26 @@ resource "aws_route_table" "SBCSWE_HFE_RT" {
 # ✅ Security Groups: Security groups act as virtual firewalls for instances. They control inbound and outbound traffic based on rules you define. Each instance can be associated with one or more security groups.
 
 
-resource "aws_security_group" "ribbon_sbc" {
-  name_prefix = var.security_group_name_prefix
-  description = var.security_group_description
+resource "aws_security_group" "SBCSWE_HFE_MGMT_SG" {
+  name_prefix = "SBCSWE_HFE_MGMT"
+  description = "Security Group SBCSWE_HFE_MGMT"
   vpc_id      = var.VPCCIDR.id
 
   dynamic "ingress" {
-    for_each = var.tcp_ports
+    for_each = var.MGMT_tcp_ports
     content {
-      from_port   = var.tcp_ports
-      to_port     = var.tcp_ports
+      from_port   = var.MGMT_tcp_ports
+      to_port     = var.MGMT_tcp_ports
       protocol    = "tcp"
       cidr_blocks = var.microsoft_teams_sip_ips
     }
   }
 
   dynamic "ingress" {
-    for_each = var.udp_ports
+    for_each = var.MGMT_udp_ports
     content {
-      from_port   = var.udp_ports
-      to_port     = var.udp_ports
+      from_port   = var.MGMT_udp_ports
+      to_port     = var.MGMT_udp_ports
       protocol    = "udp"
       cidr_blocks = var.microsoft_teams_sip_ips
     }
@@ -115,6 +115,134 @@ resource "aws_security_group" "ribbon_sbc" {
     cidr_blocks = [var.egress_cidr_block]
   }
 }
+
+
+resource "aws_route_table_association" "SBCSWE_HFE_RTA" {
+  subnet_id      = [var.SBCSWE_HFE_SUBNET]
+  route_table_id = aws_route_table.SBCSWE_HFE_RT.id
+}
+
+
+resource "aws_route_table" "SBCSWE_HFE_RT" {
+  vpc_id = aws_vpc.my_vpc.id
+
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.SBCSWE_HFE_NAT.id
+  }
+
+  tags = {
+    Name = "private-route-table"
+  }
+}
+
+
+# ✅ Security Groups: Security groups act as virtual firewalls for instances. They control inbound and outbound traffic based on rules you define. Each instance can be associated with one or more security groups.
+
+
+resource "aws_security_group" "SBCSWE_HFE_MGMT_SG" {
+  name_prefix = "SBCSWE_HFE_MGMT"
+  description = "Security Group SBCSWE_HFE_MGMT"
+  vpc_id      = var.VPCCIDR.id
+
+  dynamic "ingress" {
+    for_each = var.MGMT_tcp_ports
+    content {
+      from_port   = var.MGMT_tcp_ports
+      to_port     = var.MGMT_tcp_ports
+      protocol    = "tcp"
+      cidr_blocks = var.microsoft_teams_sip_ips
+    }
+  }
+
+  dynamic "ingress" {
+    for_each = var.MGMT_udp_ports
+    content {
+      from_port   = var.MGMT_udp_ports
+      to_port     = var.MGMT_udp_ports
+      protocol    = "udp"
+      cidr_blocks = var.microsoft_teams_sip_ips
+    }
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = [var.egress_cidr_block]
+  }
+}
+
+
+
+resource "aws_security_group" "SBCSWE_HFE_PKT_SG" {
+  name_prefix = "SBCSWE_HFE_PKT"
+  description = "Security Group SBCSWE_HFE_PKT"
+  vpc_id      = var.VPCCIDR.id
+
+  dynamic "ingress" {
+    for_each = var.PKT_tcp_ports
+    content {
+      from_port   = var.PKT_tcp_ports
+      to_port     = var.PKT_tcp_ports
+      protocol    = "tcp"
+      cidr_blocks = var.microsoft_teams_sip_ips
+    }
+  }
+
+  dynamic "ingress" {
+    for_each = var.PKT_tcp_ports
+    content {
+      from_port   = var.PKT_udp_ports
+      to_port     = var.PKT_udp_ports
+      protocol    = "udp"
+      cidr_blocks = var.microsoft_teams_sip_ips
+    }
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = [var.egress_cidr_block]
+  }
+}
+
+
+resource "aws_security_group" "SBCSWE_HFE_HA_SG" {
+  name_prefix = "SBCSWE_HFE_HA"
+  description = "Security Group SBCSWE_HFE_HA"
+  vpc_id      = var.VPCCIDR.id
+
+  dynamic "ingress" {
+    for_each = var.HA_tcp_ports
+    content {
+      from_port   = var.HA_tcp_ports
+      to_port     = var.HA_tcp_ports
+      protocol    = "tcp"
+      cidr_blocks = var.microsoft_teams_sip_ips
+    }
+  }
+
+  dynamic "ingress" {
+    for_each = var.HA_udp_ports
+    content {
+      from_port   = var.HA_tcp_ports
+      to_port     = var.HA_tcp_ports
+      protocol    = "udp"
+      cidr_blocks = var.microsoft_teams_sip_ips
+    }
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = [var.egress_cidr_block]
+  }
+}
+
+
 
 
 
