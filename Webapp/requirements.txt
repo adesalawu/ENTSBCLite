@@ -1,0 +1,2 @@
+fastapi azure-identity
+fastapi-microsoft-auth

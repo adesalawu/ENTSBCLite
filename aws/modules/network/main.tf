@@ -65,7 +65,6 @@ resource "aws_route_table_association" "SBCSWE_HFE_RTA" {
   route_table_id = aws_route_table.SBCSWE_HFE_RT.id
 }
 
-
 resource "aws_route_table" "SBCSWE_HFE_RT" {
   vpc_id = aws_vpc.my_vpc.id
 
@@ -79,9 +78,7 @@ resource "aws_route_table" "SBCSWE_HFE_RT" {
   }
 }
 
-
 # ✅ Security Groups: Security groups act as virtual firewalls for instances. They control inbound and outbound traffic based on rules you define. Each instance can be associated with one or more security groups.
-
 
 resource "aws_security_group" "SBCSWE_HFE_MGMT_SG" {
   name_prefix = "SBCSWE_HFE_MGMT"
@@ -115,65 +112,6 @@ resource "aws_security_group" "SBCSWE_HFE_MGMT_SG" {
     cidr_blocks = [var.egress_cidr_block]
   }
 }
-
-
-resource "aws_route_table_association" "SBCSWE_HFE_RTA" {
-  subnet_id      = [var.SBCSWE_HFE_SUBNET]
-  route_table_id = aws_route_table.SBCSWE_HFE_RT.id
-}
-
-
-resource "aws_route_table" "SBCSWE_HFE_RT" {
-  vpc_id = aws_vpc.my_vpc.id
-
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.SBCSWE_HFE_NAT.id
-  }
-
-  tags = {
-    Name = "private-route-table"
-  }
-}
-
-
-# ✅ Security Groups: Security groups act as virtual firewalls for instances. They control inbound and outbound traffic based on rules you define. Each instance can be associated with one or more security groups.
-
-
-resource "aws_security_group" "SBCSWE_HFE_MGMT_SG" {
-  name_prefix = "SBCSWE_HFE_MGMT"
-  description = "Security Group SBCSWE_HFE_MGMT"
-  vpc_id      = var.VPCCIDR.id
-
-  dynamic "ingress" {
-    for_each = var.MGMT_tcp_ports
-    content {
-      from_port   = var.MGMT_tcp_ports
-      to_port     = var.MGMT_tcp_ports
-      protocol    = "tcp"
-      cidr_blocks = var.microsoft_teams_sip_ips
-    }
-  }
-
-  dynamic "ingress" {
-    for_each = var.MGMT_udp_ports
-    content {
-      from_port   = var.MGMT_udp_ports
-      to_port     = var.MGMT_udp_ports
-      protocol    = "udp"
-      cidr_blocks = var.microsoft_teams_sip_ips
-    }
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = [var.egress_cidr_block]
-  }
-}
-
-
 
 resource "aws_security_group" "SBCSWE_HFE_PKT_SG" {
   name_prefix = "SBCSWE_HFE_PKT"
@@ -208,7 +146,6 @@ resource "aws_security_group" "SBCSWE_HFE_PKT_SG" {
   }
 }
 
-
 resource "aws_security_group" "SBCSWE_HFE_HA_SG" {
   name_prefix = "SBCSWE_HFE_HA"
   description = "Security Group SBCSWE_HFE_HA"
@@ -242,10 +179,6 @@ resource "aws_security_group" "SBCSWE_HFE_HA_SG" {
   }
 }
 
-
-
-
-
 # ✅ Internet Gateway: The Internet Gateway enables communication between instances in your VPC and the public internet. It's required for resources in public subnets to access the internet.
 
 resource "aws_internet_gateway" "SBCSWE_HFE_GW" {
@@ -265,21 +198,21 @@ resource "aws_nat_gateway" "SBCSWE_HFE_NAT" {
   }
 }
 
-
 # ✅ Elastic Load Balancing (ELB): ELB distributes incoming application traffic across multiple instances for better availability and fault tolerance.
 
 resource "aws_eip" "SBCSWE_HFE_NAT_EIP" {
   vpc = true
 }
 
-
 # ✅ VPC Peering: VPC peering allows you to connect multiple VPCs together, enabling direct communication between them. Peered VPCs can route traffic between them as if they were part of the same network.
 
-
+# (VPC Peering configuration would go here) 
 
 # ✅ Transit Gateway: The Transit Gateway simplifies network architecture by allowing centralized connectivity for multiple VPCs and on-premises networks. It reduces the complexity of managing point-to-point connections.
 
-
+# (Transit Gateway configuration would go here)
 
 # ✅ AWS PrivateLink: As discussed earlier, AWS PrivateLink provides private connectivity between VPCs, supported AWS services, and your on-premises networks without exposing traffic to the public internet.
+
+# (AWS PrivateLink configuration would go here)
 

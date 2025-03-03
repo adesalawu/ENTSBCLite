@@ -1,0 +1,22 @@
+---
+- name: Configure SBC for SIP Trunk
+  hosts: all
+  tasks:
+    - name: Setup SIP trunk for tenant
+      command: >
+        /usr/local/bin/sbc_config
+        --gateway {{ sip_gateway }}
+        --region {{ calling_region }}
+      register: result
+    - debug: var=result
+    
+- hosts: sbc_servers
+  tasks:
+    - name: Configure SBC for Direct Routing
+      template:
+        src: sbc_config_template.j2
+        dest: /etc/sbc/config.yml
+    - name: Restart SBC Service
+      service:
+        name: sbc
+        state: restarted
