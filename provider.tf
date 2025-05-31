@@ -10,10 +10,6 @@ terraform {
       version = "3.0.1"
     }
 
-    aws = {
-      source  = "hashicorp/aws"
-      version = "5.69.0"
-    }
   }
 
   backend "azurerm" {
@@ -39,8 +35,4 @@ provider "azuread" {
   tenant_id     = var.azure_tenant_id
 }
 
-provider "aws" {
-  region     = var.aws_region
-  access_key = var.aws_access_key
-  secret_key = var.aws_secret_key
-}
+
